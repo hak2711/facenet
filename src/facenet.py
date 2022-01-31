@@ -103,6 +103,7 @@ RANDOM_FLIP = 4
 FIXED_STANDARDIZATION = 8
 FLIP = 16
 def create_input_pipeline(input_queue, image_size, nrof_preprocess_threads, batch_size_placeholder):
+  with tf.name_scope("tempscope"):
     images_and_labels_list = []
     for _ in range(nrof_preprocess_threads):
         filenames, label, control = input_queue.dequeue()
@@ -368,11 +369,12 @@ def load_model(model, input_map=None):
     #  or if it is a protobuf file with a frozen graph
     model_exp = os.path.expanduser(model)
     if (os.path.isfile(model_exp)):
-        print('Model filename: %s' % model_exp)
-        with gfile.FastGFile(model_exp,'rb') as f:
-            graph_def = tf.GraphDef()
-            graph_def.ParseFromString(f.read())
-            tf.import_graph_def(graph_def, input_map=input_map, name='')
+      print('Model filename: %s' % model_exp)
+      with gfile.FastGFile(model_exp,'rb') as f:
+          graph_def = tf.GraphDef()
+          graph_def.ParseFromString(f.read())
+          tf.import_graph_def(graph_def, input_map=input_map, name='')
+
     else:
         print('Model directory: %s' % model_exp)
         meta_file, ckpt_file = get_model_filenames(model_exp)
