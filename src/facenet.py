@@ -120,9 +120,10 @@ def create_input_pipeline(input_queue, image_size, nrof_preprocess_threads, batc
             image = tf.cond(get_control_flag(control[0], RANDOM_FLIP),
                             lambda:tf.image.random_flip_left_right(image),
                             lambda:tf.identity(image))
+            image = tf.image.convert_image_dtype(image, dtype=tf.uint8, saturate=False)
             image = tf.cond(get_control_flag(control[0], FIXED_STANDARDIZATION),
                             lambda:(tf.cast(image, tf.float32) - 127.5)/128.0,
-                            lambda:tf.image.per_image_standardization(image))
+                            lambda:tf.image.per_image_standardization(tf.cast(image,tf.float32)))
             image = tf.cond(get_control_flag(control[0], FLIP),
                             lambda:tf.image.flip_left_right(image),
                             lambda:tf.identity(image))
@@ -515,8 +516,8 @@ def calculate_val_far(threshold, dist, actual_issame):
     false_accept = np.sum(np.logical_and(predict_issame, np.logical_not(actual_issame)))
     n_same = np.sum(actual_issame)
     n_diff = np.sum(np.logical_not(actual_issame))
-    val = float(true_accept) / float(n_same)
-    far = float(false_accept) / float(n_diff)
+    val = float(true_accept) / float(n_same) if n_same != 0 else 0
+    far = float(false_accept) / float(n_diff) if n_diff != 0 else 0
     return val, far
 
 def store_revision_info(src_path, output_dir, arg_string):

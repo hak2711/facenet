@@ -28,11 +28,9 @@ class GeneratePairs:
         """
         Generate all matches pairs
         """
-
-        for name in os.listdir(self.data_dir):
-            if name == ".ipynb_checkpoints" or name == "pair.txt":
-                continue
-
+        folders = os.listdir(self.data_dir)
+        random.shuffle(folders)
+        for name in folders:
             a = []
 
             for file in os.listdir(self.data_dir + name):
@@ -51,16 +49,12 @@ class GeneratePairs:
         """
         Generate all mismatches pairs
         """
-        print(os.listdir(self.data_dir))
-        for i, name in enumerate(os.listdir(self.data_dir)):
-            if name == ".ipynb_checkpoints" or name == "pair.txt":
-                continue
-
+        folders = os.listdir(self.data_dir)
+        random.shuffle(folders)
+        for i, name in enumerate(folders):
             remaining = os.listdir(self.data_dir)
-            remaining.remove('.ipynb_checkpoints')
-            remaining.remove('pair.txt')
             del remaining[i] # deletes the file from the list, so that it is not chosen again
-            
+
             with open(self.pairs_filepath, "a") as f:
                 for i in range(3):
                     other_dir = random.choice(remaining)
@@ -72,8 +66,8 @@ class GeneratePairs:
 
 
 if __name__ == '__main__':
-    data_dir = "/content/drive/MyDrive/Github/datasets/korean-face/"
-    pairs_filepath = "/content/drive/MyDrive/Github/datasets/korean-face/pair.txt"
+    data_dir = "/content/drive/MyDrive/Github/datasets/korean-face/validate/"
+    pairs_filepath = "/content/drive/MyDrive/Github/datasets/korean-face/pairs.txt"
     img_ext = ".jpg"
     generatePairs = GeneratePairs(data_dir, pairs_filepath, img_ext)
     generatePairs.generate()
