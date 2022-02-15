@@ -66,8 +66,8 @@ class GeneratePairs:
 
 
 if __name__ == '__main__':
-    data_dir = "/content/drive/MyDrive/Github/datasets/korean-face/validate/"
-    pairs_filepath = "/content/drive/MyDrive/Github/datasets/korean-face/pairs.txt"
+    data_dir = "/content/drive/MyDrive/datasets/korean-face/validate/"
+    pairs_filepath = "/content/drive/MyDrive/datasets/korean-face/pairs.txt"
     img_ext = ".jpg"
     generatePairs = GeneratePairs(data_dir, pairs_filepath, img_ext)
     generatePairs.generate()
